@@ -6,11 +6,11 @@ import perfectLineImg from '../assets/images/perfect_line_custom_new_17851117331
 import perfectCircleImg from '../assets/images/perfect_circle_thumb_1785092658041.jpg';
 import memoryOrderImg from '../assets/images/memory_order_custom_1785096036834.jpg';
 import colorTrapImg from '../assets/images/color_trap_custom_1785093503596.jpg';
-import codeBreakImg from '../assets/images/code_break_custom_1785093650432.jpg';
-import copyMoveImg from '../assets/images/copy_move_custom_1785093578053.jpg';
+import codeBreakImg from '../assets/images/code_break_thumb_1785195143361.jpg';
+import copyMoveImg from '../assets/images/copy_move_thumb_1785195156127.jpg';
 import missingPieceImg from '../assets/images/missing_piece_custom_1785094511638.jpg';
-import wrongAnswerImg from '../assets/images/wrong_answer_custom_1785093731275.jpg';
-import numberRushImg from '../assets/images/number_rush_custom_1785093824678.jpg';
+import wrongAnswerImg from '../assets/images/wrong_answer_thumb_1785195167934.jpg';
+import numberRushImg from '../assets/images/number_rush_thumb_1785195179955.jpg';
 import ticTacToeImg from '../assets/images/tic_tac_toe_thumb_1785092761491.jpg';
 import sameWordImg from '../assets/images/same_word_custom_1785095522834.jpg';
 import connectFourImg from '../assets/images/connect_four_custom_1785093909758.jpg';

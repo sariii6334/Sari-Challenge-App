@@ -5,6 +5,7 @@ import { getTranslations } from '../i18n/translations';
 import { AppSettings, GameId } from '../types';
 import { GAMES_LIST } from '../data/games';
 import { soundManager } from '../utils/sound';
+import { getGameThumbnail } from '../utils/gameThumbnails';
 
 interface GameExplanationModalProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ export const GameExplanationModal: React.FC<GameExplanationModalProps> = ({
   if (!isOpen || !gameId) return null;
 
   const gameInfo = GAMES_LIST.find((g) => g.id === gameId);
+  const thumbnailSrc = getGameThumbnail(gameId);
   const gameTrans = t.games[gameId as keyof typeof t.games] || {
     title: gameId,
     desc: '',
@@ -62,6 +64,19 @@ export const GameExplanationModal: React.FC<GameExplanationModalProps> = ({
           >
             <X className="w-5 h-5" />
           </button>
+
+          {/* Thumbnail Banner */}
+          {thumbnailSrc && (
+            <div className="relative w-full h-32 mb-4 rounded-2xl overflow-hidden border border-white/20">
+              <img
+                src={thumbnailSrc}
+                alt={gameTrans.title}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+            </div>
+          )}
 
           {/* Badge & Title */}
           <div className="text-center mb-6">

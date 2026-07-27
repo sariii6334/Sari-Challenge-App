@@ -1,4 +1,4 @@
-export type Language = 'ar' | 'en' | 'tr' | 'de' | 'fr' | 'ko' | 'nl' | 'es';
+export type Language = 'ar' | 'en' | 'tr' | 'de' | 'fr' | 'ko' | 'nl' | 'es' | 'hi' | 'zh';
 
 export type GameId =
   | 'perfect-hold'

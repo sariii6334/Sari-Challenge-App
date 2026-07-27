@@ -14,6 +14,8 @@ export const es: Translations = {
   korean: '한국어',
   dutch: 'Nederlands',
   spanish: 'Español',
+  hindi: 'Hindi',
+  chinese: 'Chino',
   selectLanguageTitle: 'Seleccionar Idioma',
   selectLanguageSubtitle: 'Puedes cambiar el idioma en cualquier momento desde los ajustes',
 

@@ -7,6 +7,8 @@ import { fr } from './locales/fr';
 import { ko } from './locales/ko';
 import { nl } from './locales/nl';
 import { es } from './locales/es';
+import { hi } from './locales/hi';
+import { zh } from './locales/zh';
 
 export interface Translations {
   appName: string;
@@ -23,6 +25,8 @@ export interface Translations {
   korean: string;
   dutch: string;
   spanish: string;
+  hindi: string;
+  chinese: string;
   selectLanguageTitle: string;
   selectLanguageSubtitle: string;
 
@@ -365,6 +369,8 @@ export const translations: Record<Language, Translations> = {
   ko,
   nl,
   es,
+  hi,
+  zh,
 };
 
 export function getTranslations(lang?: Language): Translations {

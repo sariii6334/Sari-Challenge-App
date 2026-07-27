@@ -14,6 +14,8 @@ export const ar: Translations = {
   korean: '한국어',
   dutch: 'Nederlands',
   spanish: 'Español',
+  hindi: 'हिन्दी',
+  chinese: '中文',
   selectLanguageTitle: 'اختر لغة التطبيق',
   selectLanguageSubtitle: 'يمكنك تغيير اللغة لاحقاً من قسم الإعدادات',
 

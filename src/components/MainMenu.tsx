@@ -19,6 +19,7 @@ import { getTranslations } from '../i18n/translations';
 import { AppSettings, GameId } from '../types';
 import { soundManager } from '../utils/sound';
 import { getGameThumbnail, getGameThumbnailStyle } from '../utils/gameThumbnails';
+import { AdBanner } from './AdBanner';
 
 interface MainMenuProps {
   settings: AppSettings;
@@ -280,6 +281,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
                         alt={gameTrans.title}
                         loading="lazy"
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+                        }}
                         className={`w-full h-full ${getGameThumbnailStyle(game.id)} group-hover:scale-105 transition-transform duration-300 ease-out`}
                       />
 
@@ -354,6 +359,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           </div>
         )}
       </main>
+
+      {/* Ad Banner inside Main Menu */}
+      <AdBanner language={settings.language} />
 
       {/* Footer Branding Bar */}
       <footer className="relative z-10 w-full max-w-6xl mx-auto px-4 py-3 text-center text-xs text-slate-400 border-t border-white/10 flex items-center justify-between">

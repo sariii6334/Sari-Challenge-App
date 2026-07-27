@@ -14,6 +14,8 @@ export const ko: Translations = {
   korean: '한국어',
   dutch: 'Nederlands',
   spanish: 'Español',
+  hindi: '힌디어',
+  chinese: '중국어',
   selectLanguageTitle: '언어 선택',
   selectLanguageSubtitle: '설정 메뉴에서 언제든지 언어를 변경할 수 있습니다',
 

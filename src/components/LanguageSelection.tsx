@@ -70,6 +70,20 @@ export const LanguageSelection: React.FC<LanguageSelectionProps> = ({
       flag: '🇪🇸',
       bg: 'from-red-500 via-amber-500 to-yellow-400',
     },
+    {
+      id: 'hi',
+      name: 'Hindi',
+      nativeName: 'हिन्दी',
+      flag: '🇮🇳',
+      bg: 'from-orange-500 via-amber-500 to-emerald-600',
+    },
+    {
+      id: 'zh',
+      name: 'Chinese',
+      nativeName: '中文',
+      flag: '🇨🇳',
+      bg: 'from-red-600 via-rose-600 to-yellow-500',
+    },
   ];
 
   const handleSelect = (lang: Language) => {

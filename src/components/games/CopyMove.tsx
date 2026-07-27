@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
-import { Move, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Move, Sparkles, Tv, AlertTriangle, RotateCcw } from 'lucide-react';
 import { getTranslations } from '../../i18n/translations';
 import { AppSettings, GameMode, GameResult } from '../../types';
 import { soundManager } from '../../utils/sound';
+import { AdModal } from '../AdModal';
+import { AdBanner } from '../AdBanner';
 
 interface CopyMoveProps {
   mode: GameMode;
@@ -29,6 +31,7 @@ export const CopyMove: React.FC<CopyMoveProps> = ({
 }) => {
   const t = getTranslations(settings.language);
   const gTrans = t.games['copy-move'] || getTranslations('en').games['copy-move'];
+  const isAr = settings.language === 'ar';
 
   const [level, setLevel] = useState<number>(1);
   const [sequence, setSequence] = useState<Direction[]>([]);
@@ -37,6 +40,11 @@ export const CopyMove: React.FC<CopyMoveProps> = ({
   const [phase, setPhase] = useState<'watch' | 'draw'>('watch');
   const [activePlayer, setActivePlayer] = useState<number>(1);
   const [p1MaxLevel, setP1MaxLevel] = useState<number | null>(null);
+
+  // Ad Revive States
+  const [showAdOffer, setShowAdOffer] = useState<boolean>(false);
+  const [isAdModalOpen, setIsAdModalOpen] = useState<boolean>(false);
+  const [hasUsedAdRevive, setHasUsedAdRevive] = useState<boolean>(false);
 
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
@@ -126,20 +134,38 @@ export const CopyMove: React.FC<CopyMoveProps> = ({
     if (nextDrawn[currentStep] !== sequence[currentStep]) {
       // Wrong Gesture!
       soundManager.playError();
-      handleGameOver(level - 1);
+      if (!hasUsedAdRevive) {
+        setShowAdOffer(true);
+      } else {
+        handleGameOver(level - 1);
+      }
       return;
     }
 
     // Check Level Complete
     if (nextDrawn.length === sequence.length) {
       soundManager.playSuccess();
+      setHasUsedAdRevive(false);
       setTimeout(() => {
         startNewLevel(level + 1);
       }, 800);
     }
   };
 
+  const handleRewardGranted = () => {
+    setHasUsedAdRevive(true);
+    setShowAdOffer(false);
+    setPlayerDrawn([]);
+
+    // Replay arrow sequence
+    setTimeout(() => {
+      setPhase('watch');
+      playArrowSequence(sequence);
+    }, 400);
+  };
+
   const handleGameOver = (finalLevel: number) => {
+    setShowAdOffer(false);
     if (mode === 'friend' && activePlayer === 1) {
       setP1MaxLevel(finalLevel);
       setActivePlayer(2);
@@ -263,6 +289,67 @@ export const CopyMove: React.FC<CopyMoveProps> = ({
           </div>
         )}
       </div>
+
+      {/* Ad Offer Modal (When making a wrong gesture) */}
+      <AnimatePresence>
+        {showAdOffer && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="w-full max-w-sm bg-slate-900 border-2 border-amber-500/40 rounded-3xl p-6 text-center text-white shadow-2xl"
+            >
+              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400">
+                <AlertTriangle className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-black mb-1">
+                {isAr ? 'حركة خاطئة!' : 'Wrong Gesture!'}
+              </h3>
+              <p className="text-xs text-slate-300 mb-6">
+                {isAr
+                  ? 'هل تريد مشاهدة إعلان قصير لإعادة مشاهدة حركة الأسهم وإعادة الرسم؟'
+                  : 'Watch a short ad to replay the arrow sequence and retry drawing?'}
+              </p>
+
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => setIsAdModalOpen(true)}
+                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-black text-sm transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Tv className="w-4 h-4" />
+                  {isAr ? 'مشاهدة إعلان وإعادة الأسهم 🎬' : 'Watch Ad to Replay Arrows 🎬'}
+                </button>
+
+                <button
+                  onClick={() => handleGameOver(level - 1)}
+                  className="w-full py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-slate-300 font-bold text-xs transition-all flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  {isAr ? 'لا شكراً، إنهاء اللعبة' : 'No thanks, finish game'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Rewarded Video Ad Modal */}
+      <AdModal
+        isOpen={isAdModalOpen}
+        title={isAr ? 'مشاهدة إعلان لإعادة الأسهم' : 'Watch Ad to Replay Arrows'}
+        rewardDescription={
+          isAr
+            ? 'استعد لمشاهدة حركة الأسهم مجدداً وبدء رسم السحبة!'
+            : 'Get ready to watch the arrow sequence again and redraw!'
+        }
+        onReward={handleRewardGranted}
+        onClose={() => setIsAdModalOpen(false)}
+        language={settings.language}
+      />
+
+      {/* Ad Banner Space */}
+      <AdBanner language={settings.language} />
 
       {/* Back Button */}
       <div className="w-full max-w-md pt-4">

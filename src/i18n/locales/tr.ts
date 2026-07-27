@@ -14,6 +14,8 @@ export const tr: Translations = {
   korean: '한국어',
   dutch: 'Nederlands',
   spanish: 'Español',
+  hindi: 'Hintçe',
+  chinese: 'Çince',
   selectLanguageTitle: 'Uygulama Dilini Seçin',
   selectLanguageSubtitle: 'Dili istediğiniz zaman ayarlardan değiştirebilirsiniz',
 

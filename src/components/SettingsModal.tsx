@@ -147,6 +147,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   { id: 'ko', label: '한국어', flag: '🇰🇷' },
                   { id: 'nl', label: 'Nederlands', flag: '🇳🇱' },
                   { id: 'es', label: 'Español', flag: '🇪🇸' },
+                  { id: 'hi', label: 'हिन्दी', flag: '🇮🇳' },
+                  { id: 'zh', label: '中文', flag: '🇨🇳' },
                 ].map((l) => (
                   <button
                     key={l.id}

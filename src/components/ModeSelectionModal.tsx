@@ -5,6 +5,8 @@ import { getTranslations } from '../i18n/translations';
 import { AppSettings, GameId, GameMode } from '../types';
 import { GAMES_LIST } from '../data/games';
 import { soundManager } from '../utils/sound';
+import { getGameThumbnail } from '../utils/gameThumbnails';
+import { AdBanner } from './AdBanner';
 
 interface ModeSelectionModalProps {
   isOpen: boolean;
@@ -27,6 +29,7 @@ export const ModeSelectionModal: React.FC<ModeSelectionModalProps> = ({
 
   const gameInfo = GAMES_LIST.find((g) => g.id === gameId);
   const isAIModeAvailable = gameInfo?.supportsAI;
+  const thumbnailSrc = getGameThumbnail(gameId);
 
   const handleChoose = (mode: GameMode) => {
     soundManager.playSuccess();
@@ -52,6 +55,19 @@ export const ModeSelectionModal: React.FC<ModeSelectionModalProps> = ({
           >
             <X className="w-5 h-5" />
           </button>
+
+          {/* Game Thumbnail Banner */}
+          {thumbnailSrc && (
+            <div className="relative w-full h-28 mb-3 rounded-2xl overflow-hidden border border-white/20">
+              <img
+                src={thumbnailSrc}
+                alt={gameInfo?.badge}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+            </div>
+          )}
 
           <span className="inline-block px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 text-xs font-black mb-2">
             {gameInfo?.badge}
@@ -157,6 +173,10 @@ export const ModeSelectionModal: React.FC<ModeSelectionModalProps> = ({
                 </button>
               </>
             )}
+          </div>
+
+          <div className="mt-4 pt-2">
+            <AdBanner language={settings.language} />
           </div>
         </motion.div>
       </div>

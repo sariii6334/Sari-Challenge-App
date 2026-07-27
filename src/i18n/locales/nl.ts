@@ -14,6 +14,8 @@ export const nl: Translations = {
   korean: '한국어',
   dutch: 'Nederlands',
   spanish: 'Español',
+  hindi: 'Hindi',
+  chinese: 'Chinees',
   selectLanguageTitle: 'Selecteer Taal',
   selectLanguageSubtitle: 'Je kunt de taal altijd wijzigen via de instellingen',
 
