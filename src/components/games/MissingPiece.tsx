@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Puzzle, Eye, HelpCircle, Tv, AlertTriangle, RotateCcw } from 'lucide-react';
+import { Puzzle, Eye, HelpCircle } from 'lucide-react';
 import { getTranslations } from '../../i18n/translations';
 import { AppSettings, GameMode, GameResult } from '../../types';
 import { soundManager } from '../../utils/sound';
-import { AdModal } from '../AdModal';
-import { AdBanner } from '../AdBanner';
 
 interface MissingPieceProps {
   mode: GameMode;
@@ -51,11 +49,6 @@ export const MissingPiece: React.FC<MissingPieceProps> = ({
   const [candidates, setCandidates] = useState<Item[]>([]);
   const [activePlayer, setActivePlayer] = useState<number>(1);
   const [p1MaxLevel, setP1MaxLevel] = useState<number | null>(null);
-
-  // Ad Revive States
-  const [showAdOffer, setShowAdOffer] = useState<boolean>(false);
-  const [isAdModalOpen, setIsAdModalOpen] = useState<boolean>(false);
-  const [hasUsedAdRevive, setHasUsedAdRevive] = useState<boolean>(false);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -103,7 +96,6 @@ export const MissingPiece: React.FC<MissingPieceProps> = ({
 
     if (candidate.id === missingItem.id) {
       soundManager.playSuccess();
-      setHasUsedAdRevive(false);
       // Correct choice!
       if (level < 5) {
         setTimeout(() => {
@@ -116,28 +108,11 @@ export const MissingPiece: React.FC<MissingPieceProps> = ({
     } else {
       // Wrong Choice!
       soundManager.playError();
-      if (!hasUsedAdRevive) {
-        setShowAdOffer(true);
-      } else {
-        handleGameOver(level - 1);
-      }
+      handleGameOver(level - 1);
     }
   };
 
-  const handleRewardGranted = () => {
-    setHasUsedAdRevive(true);
-    setShowAdOffer(false);
-    
-    // Re-show memorize phase for 3 seconds so player can see missing item
-    setPhase('memorize');
-    timeoutRef.current = setTimeout(() => {
-      setPhase('find');
-      soundManager.playSuccess();
-    }, 3000);
-  };
-
   const handleGameOver = (finalLevel: number) => {
-    setShowAdOffer(false);
     if (mode === 'friend' && activePlayer === 1) {
       setP1MaxLevel(finalLevel);
       setActivePlayer(2);
@@ -266,67 +241,6 @@ export const MissingPiece: React.FC<MissingPieceProps> = ({
           </motion.div>
         )}
       </div>
-
-      {/* Ad Offer Modal (When making a mistake) */}
-      <AnimatePresence>
-        {showAdOffer && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="w-full max-w-sm bg-slate-900 border-2 border-amber-500/40 rounded-3xl p-6 text-center text-white shadow-2xl"
-            >
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400">
-                <AlertTriangle className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-black mb-1">
-                {isAr ? 'اختيار غير صحيح!' : 'Wrong Choice!'}
-              </h3>
-              <p className="text-xs text-slate-300 mb-6">
-                {isAr
-                  ? 'هل تريد مشاهدة إعلان قصير لإلقاء نظرة مجددة على العناصر وإعادة المحاولة؟'
-                  : 'Watch a short ad to peek at the items again and retry this stage?'}
-              </p>
-
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={() => setIsAdModalOpen(true)}
-                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-black text-sm transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Tv className="w-4 h-4" />
-                  {isAr ? 'مشاهدة إعلان وإعادة النظر 🎬' : 'Watch Ad to Peek Again 🎬'}
-                </button>
-
-                <button
-                  onClick={() => handleGameOver(level - 1)}
-                  className="w-full py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-slate-300 font-bold text-xs transition-all flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  {isAr ? 'لا شكراً، إنهاء اللعبة' : 'No thanks, finish game'}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Rewarded Video Ad Modal */}
-      <AdModal
-        isOpen={isAdModalOpen}
-        title={isAr ? 'مشاهدة إعلان لإعادة المحاولة' : 'Watch Ad for Second Peek'}
-        rewardDescription={
-          isAr
-            ? 'تم منحك نظرة ثانية! تذكر العناصر جيداُ'
-            : 'You got a second peek! Memorize the items carefully'
-        }
-        onReward={handleRewardGranted}
-        onClose={() => setIsAdModalOpen(false)}
-        language={settings.language}
-      />
-
-      {/* Ad Banner Space */}
-      <AdBanner language={settings.language} />
 
       {/* Back Button */}
       <div className="w-full max-w-md pt-4">

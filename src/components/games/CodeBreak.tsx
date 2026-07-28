@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { KeyRound, Delete, Check, Lightbulb, Tv } from 'lucide-react';
+import { KeyRound, Delete, Check } from 'lucide-react';
 import { getTranslations } from '../../i18n/translations';
 import { AppSettings, GameMode, GameResult } from '../../types';
 import { soundManager } from '../../utils/sound';
-import { AdModal } from '../AdModal';
-import { AdBanner } from '../AdBanner';
 
 interface CodeBreakProps {
   mode: GameMode;
@@ -35,11 +33,6 @@ export const CodeBreak: React.FC<CodeBreakProps> = ({
   const [activePlayer, setActivePlayer] = useState<number>(1);
   const [p1Attempts, setP1Attempts] = useState<number | null>(null);
 
-  // Ad Hint state
-  const [isAdModalOpen, setIsAdModalOpen] = useState<boolean>(false);
-  const [revealedHint, setRevealedHint] = useState<string | null>(null);
-  const [hasUsedHint, setHasUsedHint] = useState<boolean>(false);
-
   useEffect(() => {
     generateNewSecretCode();
   }, [activePlayer]);
@@ -54,19 +47,6 @@ export const CodeBreak: React.FC<CodeBreakProps> = ({
     setSecretCode(code);
     setCurrentGuess('');
     setHistory([]);
-    setRevealedHint(null);
-    setHasUsedHint(false);
-  };
-
-  const handleGrantHint = () => {
-    setHasUsedHint(true);
-    // Reveal position and digit of the first digit in secretCode
-    const randomIndex = Math.floor(Math.random() * 4);
-    const digit = secretCode[randomIndex];
-    const hintMsg = isAr
-      ? `تلميح: الرقم الخانة رقم ${randomIndex + 1} هو (${digit}) 💡`
-      : `Hint: Digit at position ${randomIndex + 1} is (${digit}) 💡`;
-    setRevealedHint(hintMsg);
   };
 
   const handleKeyPress = (digit: string) => {
@@ -188,25 +168,6 @@ export const CodeBreak: React.FC<CodeBreakProps> = ({
 
       {/* Main Game Stage */}
       <div className="my-auto w-full max-w-md flex flex-col items-center my-3">
-        {/* Revealed Hint Banner */}
-        {revealedHint && (
-          <div className="w-full p-2.5 mb-3 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-300 font-extrabold text-xs text-center flex items-center justify-center gap-2">
-            <Lightbulb className="w-4 h-4 text-amber-400" />
-            <span>{revealedHint}</span>
-          </div>
-        )}
-
-        {/* Hint Request Button (Rewarded Ad) */}
-        {!hasUsedHint && (
-          <button
-            onClick={() => setIsAdModalOpen(true)}
-            className="w-full max-w-xs mb-3 py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-          >
-            <Tv className="w-3.5 h-3.5 text-amber-400" />
-            <span>{isAr ? 'الحصول على تلميح (مشاهدة إعلان 💡)' : 'Get Hint (Watch Ad 💡)'}</span>
-          </button>
-        )}
-
         {/* Color Legend (ALWAYS VISIBLE ABOVE PLAY AREA) */}
         <div className="w-full p-3 rounded-2xl bg-slate-900/90 border border-sky-400/40 text-[11px] font-bold space-y-1 mb-3 text-right rtl:text-right">
           <div className="text-sky-300 text-center font-extrabold mb-1">
@@ -292,23 +253,6 @@ export const CodeBreak: React.FC<CodeBreakProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Rewarded Video Ad Modal for Hint */}
-      <AdModal
-        isOpen={isAdModalOpen}
-        title={isAr ? 'مشاهدة إعلان كشف تلميح' : 'Watch Ad for Hint'}
-        rewardDescription={
-          isAr
-            ? 'تم كشف رقم وخانة من الرمز السري بنجاح!'
-            : 'A secret code digit position has been revealed!'
-        }
-        onReward={handleGrantHint}
-        onClose={() => setIsAdModalOpen(false)}
-        language={settings.language}
-      />
-
-      {/* Ad Banner Space */}
-      <AdBanner language={settings.language} />
 
       {/* Back Button */}
       <div className="w-full max-w-md pt-2">

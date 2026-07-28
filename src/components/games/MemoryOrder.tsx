@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Brain, Sparkles, Tv, RotateCcw, AlertTriangle } from 'lucide-react';
+import { Brain, Sparkles } from 'lucide-react';
 import { getTranslations } from '../../i18n/translations';
 import { AppSettings, GameMode, GameResult } from '../../types';
 import { soundManager } from '../../utils/sound';
-import { AdModal } from '../AdModal';
-import { AdBanner } from '../AdBanner';
 
 interface MemoryOrderProps {
   mode: GameMode;
@@ -38,11 +36,6 @@ export const MemoryOrder: React.FC<MemoryOrderProps> = ({
   const [phase, setPhase] = useState<'watch' | 'repeat'>('watch');
   const [activePlayer, setActivePlayer] = useState<number>(1);
   const [p1MaxLevel, setP1MaxLevel] = useState<number | null>(null);
-
-  // Ad Revive States
-  const [showAdOffer, setShowAdOffer] = useState<boolean>(false);
-  const [isAdModalOpen, setIsAdModalOpen] = useState<boolean>(false);
-  const [hasUsedAdRevive, setHasUsedAdRevive] = useState<boolean>(false);
 
   // Generate sequence on level start
   useEffect(() => {
@@ -97,43 +90,23 @@ export const MemoryOrder: React.FC<MemoryOrderProps> = ({
     if (nextInput[stepIdx] !== sequence[stepIdx]) {
       // Wrong Input!
       soundManager.playError();
-
-      // Offer Ad Revive if not used yet in this level
-      if (!hasUsedAdRevive) {
-        setShowAdOffer(true);
-      } else {
-        handleGameOver(level - 1);
-      }
+      handleGameOver(level - 1);
       return;
     }
 
     // Check level completion
     if (nextInput.length === sequence.length) {
       soundManager.playSuccess();
-      setHasUsedAdRevive(false); // Reset revive allowance for next level
       setTimeout(() => {
         generateNextLevel(level + 1);
       }, 800);
     }
   };
 
-  const handleRewardGranted = () => {
-    setHasUsedAdRevive(true);
-    setShowAdOffer(false);
-    setPlayerInput([]);
-    
-    // Replay sequence for player to watch again
-    setTimeout(() => {
-      playSequenceAnimation(sequence);
-    }, 400);
-  };
-
   const handleGameOver = (finalLevel: number) => {
-    setShowAdOffer(false);
     if (mode === 'friend' && activePlayer === 1) {
       setP1MaxLevel(finalLevel);
       setActivePlayer(2);
-      setHasUsedAdRevive(false);
       generateNextLevel(1);
     } else if (mode === 'friend' && activePlayer === 2) {
       const l1 = p1MaxLevel || 0;
@@ -226,67 +199,6 @@ export const MemoryOrder: React.FC<MemoryOrderProps> = ({
           })}
         </div>
       </div>
-
-      {/* Ad Offer Modal (When making a mistake) */}
-      <AnimatePresence>
-        {showAdOffer && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="w-full max-w-sm bg-slate-900 border-2 border-amber-500/40 rounded-3xl p-6 text-center text-white shadow-2xl"
-            >
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400">
-                <AlertTriangle className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-black mb-1">
-                {isAr ? 'أخطأت في التسلسل!' : 'Wrong Sequence!'}
-              </h3>
-              <p className="text-xs text-slate-300 mb-6">
-                {isAr
-                  ? 'هل تريد مشاهدة إعلان إضافي لإعادة عرض التسلسل وحفظ الألوان من جديد؟'
-                  : 'Watch a short ad to replay the sequence and get a second chance?'}
-              </p>
-
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={() => setIsAdModalOpen(true)}
-                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-black text-sm transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Tv className="w-4 h-4" />
-                  {isAr ? 'مشاهدة إعلان لإعادة التسلسل 🎬' : 'Watch Ad to Replay Sequence 🎬'}
-                </button>
-
-                <button
-                  onClick={() => handleGameOver(level - 1)}
-                  className="w-full py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-slate-300 font-bold text-xs transition-all flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  {isAr ? 'لا شكراً، إنهاء اللعبة' : 'No thanks, finish game'}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Rewarded Video Ad Modal */}
-      <AdModal
-        isOpen={isAdModalOpen}
-        title={isAr ? 'مشاهدة إعلان لإعادة المحاولة' : 'Watch Ad to Revive'}
-        rewardDescription={
-          isAr
-            ? 'تمت إعادة التسلسل! استعد لمشاهدته مجدداً وحفظ الترتيب'
-            : 'Sequence replayed! Get ready to watch and memorize again'
-        }
-        onReward={handleRewardGranted}
-        onClose={() => setIsAdModalOpen(false)}
-        language={settings.language}
-      />
-
-      {/* Banner Ad Space */}
-      <AdBanner language={settings.language} />
 
       {/* Back Button */}
       <div className="w-full max-w-md pt-2">

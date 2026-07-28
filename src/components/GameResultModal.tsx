@@ -5,7 +5,6 @@ import { Trophy, RotateCcw, Home, Award, Sparkles, AlertCircle } from 'lucide-re
 import { getTranslations } from '../i18n/translations';
 import { AppSettings, GameResult } from '../types';
 import { soundManager } from '../utils/sound';
-import { AdBanner } from './AdBanner';
 
 interface GameResultModalProps {
   isOpen: boolean;
@@ -177,9 +176,6 @@ export const GameResultModal: React.FC<GameResultModalProps> = ({
               <span>{t.playAgain}</span>
             </button>
           </div>
-
-          {/* Ad Banner inside results */}
-          <AdBanner language={settings.language} />
         </motion.div>
       </div>
     </AnimatePresence>

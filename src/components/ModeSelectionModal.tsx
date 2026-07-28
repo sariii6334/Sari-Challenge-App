@@ -6,7 +6,6 @@ import { AppSettings, GameId, GameMode } from '../types';
 import { GAMES_LIST } from '../data/games';
 import { soundManager } from '../utils/sound';
 import { getGameThumbnail } from '../utils/gameThumbnails';
-import { AdBanner } from './AdBanner';
 
 interface ModeSelectionModalProps {
   isOpen: boolean;
@@ -173,10 +172,6 @@ export const ModeSelectionModal: React.FC<ModeSelectionModalProps> = ({
                 </button>
               </>
             )}
-          </div>
-
-          <div className="mt-4 pt-2">
-            <AdBanner language={settings.language} />
           </div>
         </motion.div>
       </div>

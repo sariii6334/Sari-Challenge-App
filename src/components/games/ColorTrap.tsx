@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Palette, CheckCircle, XCircle, Tv, AlertTriangle, RotateCcw } from 'lucide-react';
+import { Palette, CheckCircle, XCircle } from 'lucide-react';
 import { getTranslations } from '../../i18n/translations';
 import { AppSettings, GameMode, GameResult } from '../../types';
 import { soundManager } from '../../utils/sound';
-import { AdModal } from '../AdModal';
-import { AdBanner } from '../AdBanner';
 
 interface ColorTrapProps {
   mode: GameMode;
@@ -49,11 +47,6 @@ export const ColorTrap: React.FC<ColorTrapProps> = ({
   const [activePlayer, setActivePlayer] = useState<number>(1);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
 
-  // Ad Revive / Correct Answer States
-  const [showAdOffer, setShowAdOffer] = useState<boolean>(false);
-  const [isAdModalOpen, setIsAdModalOpen] = useState<boolean>(false);
-  const [hasUsedAdBonus, setHasUsedAdBonus] = useState<boolean>(false);
-
   useEffect(() => {
     generateNewTrap();
   }, [round]);
@@ -86,30 +79,11 @@ export const ColorTrap: React.FC<ColorTrapProps> = ({
     } else {
       soundManager.playError();
       setFeedback('wrong');
-
-      if (!hasUsedAdBonus) {
-        setTimeout(() => {
-          setShowAdOffer(true);
-        }, 500);
-      } else {
-        proceedToNextRound(false);
-      }
+      proceedToNextRound(false);
     }
   };
 
-  const handleRewardGranted = () => {
-    setHasUsedAdBonus(true);
-    setShowAdOffer(false);
-    
-    // Add point for this round as a reward
-    if (activePlayer === 1) setP1Correct((prev) => prev + 1);
-    else setP2Correct((prev) => prev + 1);
-
-    proceedToNextRound(true);
-  };
-
   const proceedToNextRound = (wasRewardedOrCorrect: boolean) => {
-    setShowAdOffer(false);
     setTimeout(() => {
       if (round < TOTAL_ROUNDS) {
         setRound((prev) => prev + 1);
@@ -118,7 +92,6 @@ export const ColorTrap: React.FC<ColorTrapProps> = ({
         if (mode === 'friend' && activePlayer === 1) {
           setActivePlayer(2);
           setRound(1);
-          setHasUsedAdBonus(false);
         } else {
           // Finish Game
           finishGame(wasRewardedOrCorrect);
@@ -238,67 +211,6 @@ export const ColorTrap: React.FC<ColorTrapProps> = ({
           </div>
         </motion.div>
       </div>
-
-      {/* Ad Offer Modal (When making a wrong color choice) */}
-      <AnimatePresence>
-        {showAdOffer && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="w-full max-w-sm bg-slate-900 border-2 border-amber-500/40 rounded-3xl p-6 text-center text-white shadow-2xl"
-            >
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400">
-                <AlertTriangle className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-black mb-1">
-                {isAr ? 'وقعت في الفخ!' : 'Caught in the Trap!'}
-              </h3>
-              <p className="text-xs text-slate-300 mb-6">
-                {isAr
-                  ? 'اخترت لون الكلمة بدلاً من لون الحبر. شاهد إعلاناً قصيراً لتصحيح النقطة والمتابعة!'
-                  : 'You picked word text color instead of ink color. Watch an ad to save the point and continue!'}
-              </p>
-
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={() => setIsAdModalOpen(true)}
-                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950 font-black text-sm transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Tv className="w-4 h-4" />
-                  {isAr ? 'مشاهدة إعلان وتصحيح النقطة 🎬' : 'Watch Ad to Save Point 🎬'}
-                </button>
-
-                <button
-                  onClick={() => proceedToNextRound(false)}
-                  className="w-full py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-slate-300 font-bold text-xs transition-all flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  {isAr ? 'متابعة بدون نقطة' : 'Continue without point'}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Rewarded Video Ad Modal */}
-      <AdModal
-        isOpen={isAdModalOpen}
-        title={isAr ? 'مشاهدة إعلان لتصحيح النقطة' : 'Watch Ad to Save Point'}
-        rewardDescription={
-          isAr
-            ? 'تمت إضافة نقطة الجولة بنجاح! واصل التركيز في الجولات القادمة'
-            : 'Round point awarded! Stay focused for remaining rounds'
-        }
-        onReward={handleRewardGranted}
-        onClose={() => setIsAdModalOpen(false)}
-        language={settings.language}
-      />
-
-      {/* Ad Banner Space */}
-      <AdBanner language={settings.language} />
 
       {/* Back Button */}
       <div className="w-full max-w-md pt-4">
