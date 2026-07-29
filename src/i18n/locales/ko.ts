@@ -40,6 +40,7 @@ export const ko: Translations = {
   turnNow: '현재 차례',
   reached21Lost: '21 달성 (패배)',
   wonRound: '라운드 승리! 🎉',
+  watchAdForRetry: '🎁 광고를 시청하고 추가 기회 얻기',
 
   playSolo: '혼자 하기',
   playWithFriend: '친구와 함께',
