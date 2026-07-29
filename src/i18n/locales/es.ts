@@ -1,5 +1,4 @@
-```typescript
-import { Translations } from '../translations';
+import { Translations } from '../../types';
 
 export const es: Translations = {
   appName: 'Sari Challenge',
@@ -419,5 +418,3 @@ export const es: Translations = {
     }
   }
 };
-
-```
