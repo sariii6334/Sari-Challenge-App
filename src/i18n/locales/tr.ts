@@ -2,7 +2,7 @@ import { Translations } from '../translations';
 
 export const tr: Translations = {
   appName: 'Sari Challenge',
-  appSubtitle: 'Rekabetçi Mini Oyunlar Platformu',
+  appSubtitle: 'Competitief Minigames Platform',
   createdBy: 'Created by Sari',
   version: 'Sürüm 1.0',
 
@@ -294,7 +294,7 @@ export const tr: Translations = {
         'İki oyuncu da AYNI kelimeyi yazdığında -> ZAFER! 🎉'
       ],
       quickHowToPlay: '💡 Hızlı Nasıl Oynanır:',
-      step1: '1. Tur: Her oyuncu gizli و rastgele bir kelime yazar.',
+      step1: '1. Tur: Her oyuncu gizli ve rastgele bir kelime yazar.',
       step2: 'İki kelime gösterilir, ardından her oyuncu ortak bir kelime girer.',
       step3: 'İkiniz de BİREBİR AYNI kelimeyi yazarsanız ← KAZANDINIZ! 🎉',
       targetWordsNextRound: 'Gelecek tur için hedef kelimeler:',
