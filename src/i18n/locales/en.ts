@@ -40,6 +40,7 @@ export const en: Translations = {
   turnNow: 'Current Turn',
   reached21Lost: 'Reached 21 (Lost)',
   wonRound: 'Won the round! 🎉',
+  watchAdForRetry: '🎁 Watch an ad for an extra try',
 
   playSolo: 'Play Solo',
   playWithFriend: 'Play with Friend',
