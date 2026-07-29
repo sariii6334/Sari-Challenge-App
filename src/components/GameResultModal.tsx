@@ -19,6 +19,7 @@ declare global {
     AndroidAds?: {
       showRewardedAd: () => void;
     };
+    onRewardEarned?: () => void;
   }
 }
 
@@ -60,6 +61,17 @@ export const GameResultModal: React.FC<GameResultModalProps> = ({
       }
     }
   }, [isOpen, result]);
+
+  // Listen for the native Android callback fired after a rewarded ad is
+  // successfully watched, and treat it as "play again" for the current game.
+  useEffect(() => {
+    window.onRewardEarned = () => {
+      onPlayAgain();
+    };
+    return () => {
+      delete window.onRewardEarned;
+    };
+  }, [onPlayAgain]);
 
   if (!isOpen || !result) return null;
 
