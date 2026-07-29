@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
-import { Trophy, RotateCcw, Home, Award, Sparkles, AlertCircle } from 'lucide-react';
+import { Trophy, RotateCcw, Home, Award, Sparkles, AlertCircle, Gift } from 'lucide-react';
 import { getTranslations } from '../i18n/translations';
-import { AppSettings, GameResult } from '../types';
+import { AppSettings, GameResult, GameId } from '../types';
 import { soundManager } from '../utils/sound';
 
 interface GameResultModalProps {
@@ -14,6 +14,23 @@ interface GameResultModalProps {
   onMainMenu: () => void;
 }
 
+declare global {
+  interface Window {
+    AndroidAds?: {
+      showRewardedAd: () => void;
+    };
+  }
+}
+
+const rewardedAdGames: GameId[] = [
+  'copy-move',
+  'color-trap',
+  'memory-order',
+  'missing-piece',
+  'wrong-answer',
+  'bee-hive-defense',
+];
+
 export const GameResultModal: React.FC<GameResultModalProps> = ({
   isOpen,
   result,
@@ -22,6 +39,7 @@ export const GameResultModal: React.FC<GameResultModalProps> = ({
   onMainMenu,
 }) => {
   const t = getTranslations(settings.language);
+  const isInsideApp = typeof window !== 'undefined' && !!window.AndroidAds;
 
   useEffect(() => {
     if (isOpen && result) {
@@ -46,6 +64,7 @@ export const GameResultModal: React.FC<GameResultModalProps> = ({
   if (!isOpen || !result) return null;
 
   const isSolo = result.mode === 'solo';
+  const showRewardButton = isInsideApp && rewardedAdGames.includes(result.gameId);
 
   // Determine Winner Title
   let winnerText = '';
@@ -60,6 +79,13 @@ export const GameResultModal: React.FC<GameResultModalProps> = ({
   } else if (result.winner === 'ai') {
     winnerText = `${t.winner} ${t.computerName}`;
   }
+
+  const handleWatchAdForRetry = () => {
+    soundManager.playClick();
+    if (window.AndroidAds) {
+      window.AndroidAds.showRewardedAd();
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -151,6 +177,17 @@ export const GameResultModal: React.FC<GameResultModalProps> = ({
               </div>
             )}
           </div>
+
+          {/* Watch Ad for Retry Button - Only for specific games, only inside the Android app */}
+          {showRewardButton && (
+            <button
+              onClick={handleWatchAdForRetry}
+              className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 font-extrabold text-sm text-white shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 mb-3"
+            >
+              <Gift className="w-4 h-4" />
+              <span>{t.watchAdForRetry || 'شاهد إعلان واحصل على محاولة إضافية'}</span>
+            </button>
+          )}
 
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-3 mb-3">
