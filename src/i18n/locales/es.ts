@@ -1,3 +1,4 @@
+```typescript
 import { Translations } from '../translations';
 
 export const es: Translations = {
@@ -40,6 +41,7 @@ export const es: Translations = {
   turnNow: 'Turno Actual',
   reached21Lost: 'Alcanzó el 21 (Perdió)',
   wonRound: '¡Ganó la ronda! 🎉',
+  watchAdForRetry: '🎁 Ver un anuncio para obtener un intento adicional',
 
   playSolo: 'Jugar Solo',
   playWithFriend: 'Jugar con un Amigo',
@@ -71,7 +73,7 @@ export const es: Translations = {
   accuracy: 'Precisión',
   time: 'Tiempo',
   attempts: 'Intentos',
-  bestScore: 'Mejor R record',
+  bestScore: 'Mejor Récord',
   targetTime: 'Tiempo Objetivo',
   actualTime: 'Tiempo Real',
   difference: 'Diferencia',
@@ -417,3 +419,5 @@ export const es: Translations = {
     }
   }
 };
+
+```
