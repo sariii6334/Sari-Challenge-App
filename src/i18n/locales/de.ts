@@ -40,6 +40,7 @@ export const de: Translations = {
   turnNow: 'Aktueller Zug',
   reached21Lost: 'Hat 21 erreicht (Verloren)',
   wonRound: 'Runde gewonnen! 🎉',
+  watchAdForRetry: '🎁 Werbung ansehen für einen zusätzlichen Versuch',
 
   playSolo: 'Einzelspieler',
   playWithFriend: 'Mit Freund spielen',
