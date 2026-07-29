@@ -92,6 +92,12 @@ export const zh: Translations = {
   showPreGameInfo: '开始前显示游戏说明',
   resetSettings: '重置所有设置',
 
+  rewardAds: '激励广告',
+  watchRewardAd: '观看广告以获取奖励',
+  adNotReady: '广告尚未加载完成，请稍后再试。',
+  adClosed: '广告已关闭，未发放奖励。',
+  rewardGranted: '恭喜！奖励已成功发放 🎉',
+
   games: {
     'perfect-hold': {
       title: 'Perfect Hold',
