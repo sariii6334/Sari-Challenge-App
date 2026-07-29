@@ -40,6 +40,7 @@ export const hi: Translations = {
   turnNow: 'अब आपकी बारी',
   reached21Lost: '21 पर पहुंचे (हार गए)',
   wonRound: 'राउंड जीता! 🎉',
+  watchAdForRetry: '🎁 अतिरिक्त प्रयास पाने के लिए विज्ञापन देखें',
 
   playSolo: 'अकेले खेलें',
   playWithFriend: 'दोस्त के साथ खेलें',
