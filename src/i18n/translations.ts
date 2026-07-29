@@ -52,6 +52,7 @@ export interface Translations {
   turnNow: string;
   reached21Lost: string;
   wonRound: string;
+  watchAdForRetry: string;
   
   // Game modes
   playSolo: string;
