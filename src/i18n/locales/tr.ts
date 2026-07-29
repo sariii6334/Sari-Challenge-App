@@ -2,7 +2,7 @@ import { Translations } from '../translations';
 
 export const tr: Translations = {
   appName: 'Sari Challenge',
-  appSubtitle: 'Competitief Minigames Platform',
+  appSubtitle: 'Rekabetçi Mini Oyunlar Platformu',
   createdBy: 'Created by Sari',
   version: 'Sürüm 1.0',
 
@@ -91,6 +91,12 @@ export const tr: Translations = {
   resetNames: 'Varsayılan İsimlere Dön',
   showPreGameInfo: 'Oyuna başlamadan önce açıklamayı göster',
   resetSettings: 'Tüm Ayarları Sıfırla',
+
+  rewardAds: 'Ödüllü Reklamlar',
+  watchRewardAd: 'Ödül kazanmak için reklamı izle',
+  adNotReady: 'Reklam henüz yüklenmedi, lütfen biraz sonra tekrar deneyin.',
+  adClosed: 'Reklam kapatıldı, ödül verilmedi.',
+  rewardGranted: 'Tebrikler! Ödülünüz başarıyla eklendi 🎉',
 
   games: {
     'perfect-hold': {
