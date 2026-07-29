@@ -40,6 +40,7 @@ export const nl: Translations = {
   turnNow: 'Huidige Beurt',
   reached21Lost: 'Heeft 21 bereikt (Verloren)',
   wonRound: 'Ronde gewonnen! 🎉',
+  watchAdForRetry: '🎁 Bekijk advertentie voor extra poging',
 
   playSolo: 'Solo Spelen',
   playWithFriend: 'Met een Vriend',
