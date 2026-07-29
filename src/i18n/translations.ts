@@ -53,6 +53,13 @@ export interface Translations {
   reached21Lost: string;
   wonRound: string;
   watchAdForRetry: string;
+
+  // Reward Ads keys (تمت الإضافة هنا لحل المشكلة)
+  rewardAds: string;
+  watchRewardAd: string;
+  adNotReady: string;
+  adClosed: string;
+  rewardGranted: string;
   
   // Game modes
   playSolo: string;
