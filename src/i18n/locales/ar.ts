@@ -40,6 +40,7 @@ export const ar: Translations = {
   turnNow: 'دور الآن',
   reached21Lost: 'وصل إلى 21 (خسر)',
   wonRound: 'فاز بالجولة 🎉',
+  watchAdForRetry: '🎁 مشاهدة إعلان للحصول على محاولة إضافية',
 
   playSolo: 'اللعب لوحدي',
   playWithFriend: 'اللعب مع صديق',
