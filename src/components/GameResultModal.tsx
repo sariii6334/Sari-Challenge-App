@@ -19,6 +19,7 @@ declare global {
     AndroidAds?: {
       showRewardedAd: () => void;
       showInterstitialAd: () => void;
+      prepareForTransition: () => void;
     };
     onRewardEarned?: () => void;
   }
