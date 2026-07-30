@@ -134,7 +134,7 @@ export default function App() {
       const cyclePos = next % 5;
       // يعرض إعلان بيني عند اللعبة الثانية والخامسة من كل دورة 5 ألعاب
       if ((cyclePos === 2 || cyclePos === 0) && window.AndroidAds?.showInterstitialAd) {
-        window.AndroidAds.showInterstitialAd();
+        setTimeout(() => window.AndroidAds?.showInterstitialAd(), 300);
       }
       return next;
     });
