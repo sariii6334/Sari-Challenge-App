@@ -63,6 +63,9 @@ export default function App() {
   const [gameResult, setGameResult] = useState<GameResult | null>(null);
   const [isResultOpen, setIsResultOpen] = useState(false);
 
+  // Counter used to show an interstitial ad twice every 5 finished games
+  const [gamesPlayedCount, setGamesPlayedCount] = useState<number>(0);
+
   // Update HTML document direction and sound settings whenever settings change
   useEffect(() => {
     soundManager.updateSettings(settings.soundEnabled, settings.vibrationEnabled);
@@ -124,6 +127,16 @@ export default function App() {
   const handleGameFinish = (result: GameResult) => {
     setGameResult(result);
     setIsResultOpen(true);
+
+    setGamesPlayedCount((prev) => {
+      const next = prev + 1;
+      const cyclePos = next % 5;
+      // يعرض إعلان بيني عند اللعبة الثانية والخامسة من كل دورة 5 ألعاب
+      if ((cyclePos === 2 || cyclePos === 0) && window.AndroidAds?.showInterstitialAd) {
+        window.AndroidAds.showInterstitialAd();
+      }
+      return next;
+    });
   };
 
   const handlePlayAgain = () => {
