@@ -125,6 +125,7 @@ export default function App() {
   };
 
   const handleGameFinish = (result: GameResult) => {
+    window.AndroidAds?.prepareForTransition?.();
     setGameResult(result);
     setIsResultOpen(true);
 
