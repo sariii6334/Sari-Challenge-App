@@ -18,6 +18,7 @@ declare global {
   interface Window {
     AndroidAds?: {
       showRewardedAd: () => void;
+      showInterstitialAd: () => void;
     };
     onRewardEarned?: () => void;
   }
