@@ -97,7 +97,7 @@ export const GameResultModal: React.FC<GameResultModalProps> = ({
   const handleWatchAdForRetry = () => {
     soundManager.playClick();
     if (window.AndroidAds) {
-      window.AndroidAds.showRewardedAd();
+      setTimeout(() => window.AndroidAds?.showRewardedAd(), 300);
     }
   };
 
