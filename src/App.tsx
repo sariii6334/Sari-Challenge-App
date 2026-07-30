@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { AppSettings, GameId, GameMode, GameResult, Language } from './types';
 import { loadSettings, saveSettings } from './utils/storage';
 import { soundManager } from './utils/sound';
@@ -19,22 +19,29 @@ import { GameExplanationModal } from './components/GameExplanationModal';
 import { ModeSelectionModal } from './components/ModeSelectionModal';
 import { GameResultModal } from './components/GameResultModal';
 
-// Game Components
-import { PerfectHold } from './components/games/PerfectHold';
-import { Game21 } from './components/games/Game21';
-import { PerfectLine } from './components/games/PerfectLine';
-import { PerfectCircle } from './components/games/PerfectCircle';
-import { MemoryOrder } from './components/games/MemoryOrder';
-import { ColorTrap } from './components/games/ColorTrap';
-import { CodeBreak } from './components/games/CodeBreak';
-import { CopyMove } from './components/games/CopyMove';
-import { MissingPiece } from './components/games/MissingPiece';
-import { WrongAnswer } from './components/games/WrongAnswer';
-import { NumberRush } from './components/games/NumberRush';
-import { TicTacToe } from './components/games/TicTacToe';
-import { SameWord } from './components/games/SameWord';
-import { ConnectFour } from './components/games/ConnectFour';
-import { BeeHiveDefense } from './components/games/BeeHiveDefense';
+// Game Components - Lazy loaded so each game's code only downloads when the player opens it
+const PerfectHold = lazy(() => import('./components/games/PerfectHold').then(m => ({ default: m.PerfectHold })));
+const Game21 = lazy(() => import('./components/games/Game21').then(m => ({ default: m.Game21 })));
+const PerfectLine = lazy(() => import('./components/games/PerfectLine').then(m => ({ default: m.PerfectLine })));
+const PerfectCircle = lazy(() => import('./components/games/PerfectCircle').then(m => ({ default: m.PerfectCircle })));
+const MemoryOrder = lazy(() => import('./components/games/MemoryOrder').then(m => ({ default: m.MemoryOrder })));
+const ColorTrap = lazy(() => import('./components/games/ColorTrap').then(m => ({ default: m.ColorTrap })));
+const CodeBreak = lazy(() => import('./components/games/CodeBreak').then(m => ({ default: m.CodeBreak })));
+const CopyMove = lazy(() => import('./components/games/CopyMove').then(m => ({ default: m.CopyMove })));
+const MissingPiece = lazy(() => import('./components/games/MissingPiece').then(m => ({ default: m.MissingPiece })));
+const WrongAnswer = lazy(() => import('./components/games/WrongAnswer').then(m => ({ default: m.WrongAnswer })));
+const NumberRush = lazy(() => import('./components/games/NumberRush').then(m => ({ default: m.NumberRush })));
+const TicTacToe = lazy(() => import('./components/games/TicTacToe').then(m => ({ default: m.TicTacToe })));
+const SameWord = lazy(() => import('./components/games/SameWord').then(m => ({ default: m.SameWord })));
+const ConnectFour = lazy(() => import('./components/games/ConnectFour').then(m => ({ default: m.ConnectFour })));
+const BeeHiveDefense = lazy(() => import('./components/games/BeeHiveDefense').then(m => ({ default: m.BeeHiveDefense })));
+
+// Simple loading fallback shown for the brief moment a game's code is downloading
+const GameLoadingFallback: React.FC = () => (
+  <div className="flex items-center justify-center min-h-[80vh]">
+    <div className="w-12 h-12 border-4 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
+  </div>
+);
 
 export default function App() {
   const [settings, setSettings] = useState<AppSettings>(() => loadSettings());
@@ -218,7 +225,9 @@ export default function App() {
                 onOpenGuide={() => setIsGuideOpen(true)}
               />
             ) : (
-              renderActiveGame()
+              <Suspense fallback={<GameLoadingFallback />}>
+                {renderActiveGame()}
+              </Suspense>
             )}
           </main>
         </div>
